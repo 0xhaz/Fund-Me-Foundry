@@ -6,7 +6,7 @@ import {MockV3Aggregator} from "../test/mocks/MockV3Aggregator.sol";
 
 contract HelperConfig is Script {
     // If we are on local anvil, we deploy mocks
-    //  else, grab the existing address from live network
+    //  else, grab the existing address from live networ
     NetworkConfig public activeNetworkConfig;
 
     uint8 public constant DECIMALS = 8;
