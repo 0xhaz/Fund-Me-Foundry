@@ -3,11 +3,14 @@
 pragma solidity ^0.8.18;
 
 import {Test, console} from "forge-std/Test.sol";
-import {FundMe} from "../src/FundMe.sol";
-import {DeployFundMe} from "../script/DeployFundMe.s.sol";
+import {FundMe} from "../../src/FundMe.sol";
+import {DeployFundMe} from "../../script/DeployFundMe.s.sol";
+import {HelperConfig} from "../../script/HelperConfig.s.sol";
+import {StdCheats} from "forge-std/StdCheats.sol";
 
-contract FundMeTest is Test {
-    FundMe fundMe;
+contract FundMeTest is StdCheats, Test {
+    FundMe public fundMe;
+    HelperConfig public helperConfig;
     address USER = makeAddr("user");
     uint256 constant SEND_VALUE = 0.1 ether;
     uint256 constant STARTING_BALANCE = 10 ether;
@@ -16,8 +19,14 @@ contract FundMeTest is Test {
     function setUp() external {
         // fundMe = new FundMe(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         DeployFundMe deployFundMe = new DeployFundMe();
-        fundMe = deployFundMe.run();
+        (fundMe, helperConfig) = deployFundMe.run();
         vm.deal(USER, STARTING_BALANCE);
+    }
+
+    function testPriceFeedSetCorrectly() public {
+        address retrievedPriceFeed = address(fundMe.getPriceFeed());
+        address expectedPriceFeed = helperConfig.activeNetworkConfig();
+        assertEq(retrievedPriceFeed, expectedPriceFeed);
     }
 
     function testMinimumDollarIsFive() public {

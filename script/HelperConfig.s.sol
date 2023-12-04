@@ -16,6 +16,8 @@ contract HelperConfig is Script {
         address priceFeed;
     }
 
+    event HelperConfig__CreateMockPriceFeed(address priceFeed);
+
     constructor() {
         if (block.chainid == 11155111) {
             activeNetworkConfig = getSepoliaEthConfig();
